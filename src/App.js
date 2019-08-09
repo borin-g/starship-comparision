@@ -29,42 +29,44 @@ export default class App extends Component {
       starships: [...starshipApi1.results, ...starshipApi2.results, ...starshipApi3.results, ...starshipApi4.results]
     });
   }
-  handleChangeOne = (e) => {
+
+  handleChange = (e) => {
+    let { name, value } = e.target;
     this.state.starships.map(starship => {
-      if (starship.name === e.target.value) {
-        this.setState({ starship1: starship });
-      }
-    });
-  }
-  handleChangeTwo = (e) => {
-    this.state.starships.map(starship => {
-      if (starship.name === e.target.value) {
-        this.setState({ starship2: starship });
+      if (starship.name === value) {
+        this.setState({ [name]: starship });
       }
     });
   }
   render() {
     let starship1 = this.state.starship1;
     let starship2 = this.state.starship2;
+    const propertyObject = {
+      Name: 'name',
+      Cost: 'cost_in_credits',
+      Speed: 'max_atmosphering_speed',
+      'Cargo Size': 'cargo_capacity',
+      Passengers: 'passengers'
+    };
+    let properties = Object.keys(propertyObject);
     return (
       <div className='container-fluid'>
         <h1 className='mb-4'>Starship Comparision</h1>
         <div className='form-group row no-gutters'>
-          <SelectInput handleChange={this.handleChangeOne}>
-            <option selected disabled>Please Choose A Starship</option>
+          <SelectInput onChange={this.handleChange} name='starship1'>
             {this.state.starships.map((starship, index) => <option key={index}>{starship.name}</option>)}
           </SelectInput>
-          <SelectInput handleChange={this.handleChangeTwo}>
-            <option selected disabled>Please Choose A Starship</option>
+          <SelectInput onChange={this.handleChange} name='starship2'>
             {this.state.starships.map((starship, index) => <option key={index}>{starship.name}</option>)}
           </SelectInput>
         </div>
         <Table>
-          <TableRow th='Name' td1={starship1['name']} td2={starship2['name']} />
-          <TableRow th='Cost' td1={starship1['cost_in_credits']} td2={starship2['cost_in_credits']} />
-          <TableRow th='Speed' td1={starship1['max_atmosphering_speed']} td2={starship2['max_atmosphering_speed']} />
-          <TableRow th='Cargo Size' td1={starship1['cargo_capacity']} td2={starship2['cargo_capacity']} />
-          <TableRow th='Passengers' td1={starship1['passengers']} td2={starship2['passengers']} />
+          {properties.map(property => {
+            return (<TableRow key={property} th={property}
+              td1={starship1[propertyObject[property]]}
+              td2={starship2[propertyObject[property]]}
+            />)
+          })}
         </Table>
       </div>
     )

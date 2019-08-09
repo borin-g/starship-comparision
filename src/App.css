@@ -12,3 +12,7 @@ th {
 td {
   width: 40%;
 }
+
+.redBackground {
+  background: red;
+}
